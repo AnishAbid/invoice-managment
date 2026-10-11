@@ -1,6 +1,7 @@
 export type Currency = "PKR" | "USD" | "GBP";
 export type Language = "en" | "ur";
 export type ReceiptKind = "generated" | "uploaded";
+export type TemplateId = "classic" | "thermal" | "modern" | "bold" | "elegant" | "memo";
 
 export type PaymentMethod =
   | "cash"
@@ -37,6 +38,7 @@ export interface GeneratedReceiptData {
   notes?: string;
   language: Language;
   currency: Currency;
+  template?: TemplateId; // missing on receipts saved before templates existed → classic
 }
 
 export interface UploadedFileMeta {

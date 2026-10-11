@@ -60,6 +60,53 @@ export function computeTotals(data: GeneratedReceiptData) {
   return { subtotal, discount, tax, total };
 }
 
+const ONES = [
+  "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve",
+  "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen",
+];
+const TENS = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+
+function below1000(n: number): string {
+  const h = Math.floor(n / 100);
+  const r = n % 100;
+  const rest = r < 20 ? ONES[r] : `${TENS[Math.floor(r / 10)]}${r % 10 ? ` ${ONES[r % 10]}` : ""}`;
+  return [h ? `${ONES[h]} Hundred` : "", rest].filter(Boolean).join(" ");
+}
+
+function integerInWords(n: number, southAsian: boolean): string {
+  if (n === 0) return "Zero";
+  // PKR amounts read in lakh/crore, like a paper cash memo; others use thousand/million/billion
+  const scales: [number, string][] = southAsian
+    ? [[1e7, "Crore"], [1e5, "Lakh"], [1e3, "Thousand"]]
+    : [[1e9, "Billion"], [1e6, "Million"], [1e3, "Thousand"]];
+  const parts: string[] = [];
+  for (const [size, name] of scales) {
+    if (n >= size) {
+      parts.push(`${integerInWords(Math.floor(n / size), southAsian)} ${name}`);
+      n %= size;
+    }
+  }
+  if (n) parts.push(below1000(n));
+  return parts.join(" ");
+}
+
+const UNITS: Record<Currency, [string, string]> = {
+  PKR: ["Rupees", "Paisa"],
+  USD: ["Dollars", "Cents"],
+  GBP: ["Pounds", "Pence"],
+};
+
+/** English amount in words, e.g. "Rupees One Lakh Twenty Thousand Only". */
+export function amountInWords(amount: number, currency: Currency) {
+  const value = Math.max(0, Math.round((amount || 0) * 100));
+  const whole = Math.floor(value / 100);
+  const fraction = value % 100;
+  const [major, minor] = UNITS[currency];
+  const words = integerInWords(whole, currency === "PKR");
+  const tail = fraction ? ` and ${below1000(fraction)} ${minor}` : "";
+  return currency === "PKR" ? `${major} ${words}${tail} Only` : `${words} ${major}${tail} Only`;
+}
+
 type Dict = Record<string, string>;
 
 const en: Dict = {
@@ -90,6 +137,14 @@ const en: Dict = {
   easypaisa: "Easypaisa",
   cheque: "Cheque",
   other: "Other",
+  cashMemo: "Cash Memo",
+  paid: "Paid",
+  amountPaid: "Amount paid",
+  datePaid: "Date paid",
+  summary: "Summary",
+  inWords: "Amount in words",
+  ms: "M/s.",
+  sNo: "S.No.",
 };
 
 const ur: Dict = {
@@ -120,6 +175,14 @@ const ur: Dict = {
   easypaisa: "ایزی پیسہ",
   cheque: "چیک",
   other: "دیگر",
+  cashMemo: "کیش میمو",
+  paid: "ادا شدہ",
+  amountPaid: "ادا شدہ رقم",
+  datePaid: "تاریخ ادائیگی",
+  summary: "خلاصہ",
+  inWords: "رقم الفاظ میں",
+  ms: "جناب",
+  sNo: "نمبر شمار",
 };
 
 export function t(lang: Language, key: string) {

@@ -4,10 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Download, FileImage, Loader2, Pencil, Printer, Trash2 } from "lucide-react";
-import { ReceiptDocument } from "@/components/receipt-document";
+import { ReceiptPreview } from "@/components/receipt-preview";
 import { deleteReceipt, getReceiptFile } from "@/lib/db";
 import { downloadAsPDF, downloadAsPNG, downloadBlob, printElement, printFile } from "@/lib/export";
 import { formatDate, formatMoney } from "@/lib/receipt";
+import { getTemplate } from "@/lib/templates";
 import { useReceipt } from "@/lib/use-receipt";
 import type { GeneratedReceipt, UploadedReceipt } from "@/lib/types";
 
@@ -48,12 +49,14 @@ function GeneratedView({ receipt, onDelete }: { receipt: GeneratedReceipt; onDel
   const docRef = useRef<HTMLDivElement>(null);
   const [busy, setBusy] = useState<"pdf" | "png" | null>(null);
   const filename = `${receipt.data.receiptNumber}-${receipt.title}`.replace(/[^\w؀-ۿ-]+/g, "_");
+  const template = getTemplate(receipt.data.template);
 
   async function run(kind: "pdf" | "png") {
     if (!docRef.current) return;
     setBusy(kind);
     try {
-      await (kind === "pdf" ? downloadAsPDF : downloadAsPNG)(docRef.current, filename);
+      if (kind === "pdf") await downloadAsPDF(docRef.current, filename, template.paper);
+      else await downloadAsPNG(docRef.current, filename);
     } finally {
       setBusy(null);
     }
@@ -66,7 +69,7 @@ function GeneratedView({ receipt, onDelete }: { receipt: GeneratedReceipt; onDel
           <h1 className="text-2xl font-semibold tracking-tight" dir="auto">{receipt.title}</h1>
           <p className="text-sm text-slate-500">
             <span className="font-mono">{receipt.data.receiptNumber}</span> · {formatDate(receipt.date)} ·{" "}
-            {formatMoney(receipt.total, receipt.currency)}
+            {formatMoney(receipt.total, receipt.currency)} · {template.name} template
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -76,7 +79,7 @@ function GeneratedView({ receipt, onDelete }: { receipt: GeneratedReceipt; onDel
           <button className="btn-secondary" onClick={() => run("png")} disabled={!!busy}>
             {busy === "png" ? <Loader2 className="size-4 animate-spin" /> : <FileImage className="size-4" />} Image
           </button>
-          <button className="btn-secondary" onClick={() => docRef.current && printElement(docRef.current, filename)}>
+          <button className="btn-secondary" onClick={() => docRef.current && printElement(docRef.current, filename, template.paper)}>
             <Printer className="size-4" /> Print
           </button>
           <Link href={`/receipts/${receipt.id}/edit`} className="btn-secondary">
@@ -88,8 +91,8 @@ function GeneratedView({ receipt, onDelete }: { receipt: GeneratedReceipt; onDel
         </div>
       </div>
       <div className="card overflow-x-auto">
-        <div className="min-w-[600px]">
-          <ReceiptDocument ref={docRef} data={receipt.data} />
+        <div className={template.paper === "thermal" ? "" : "min-w-[600px]"}>
+          <ReceiptPreview docRef={docRef} data={receipt.data} />
         </div>
       </div>
     </>

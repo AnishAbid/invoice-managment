@@ -1,5 +1,7 @@
 "use client";
 
+import type { Paper } from "./templates";
+
 async function renderCanvas(el: HTMLElement) {
   const { default: html2canvas } = await import("html2canvas-pro");
   // Make sure web fonts (Urdu Nastaliq) are ready before rasterising
@@ -16,8 +18,22 @@ function triggerDownload(href: string, filename: string) {
   a.remove();
 }
 
-export async function downloadAsPDF(el: HTMLElement, filename: string) {
+export async function downloadAsPDF(el: HTMLElement, filename: string, paper: Paper = "a4") {
   const [{ jsPDF }, canvas] = await Promise.all([import("jspdf"), renderCanvas(el)]);
+  const name = filename.endsWith(".pdf") ? filename : `${filename}.pdf`;
+
+  if (paper === "thermal") {
+    // One continuous 80 mm strip, as long as the slip needs
+    const width = 80;
+    const margin = 4;
+    const imgW = width - margin * 2;
+    const imgH = (canvas.height * imgW) / canvas.width;
+    const roll = new jsPDF({ orientation: "portrait", unit: "mm", format: [width, imgH + margin * 2] });
+    roll.addImage(canvas.toDataURL("image/jpeg", 0.95), "JPEG", margin, margin, imgW, imgH);
+    roll.save(name);
+    return;
+  }
+
   const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
   const pageW = pdf.internal.pageSize.getWidth();
   const pageH = pdf.internal.pageSize.getHeight();
@@ -38,7 +54,7 @@ export async function downloadAsPDF(el: HTMLElement, filename: string) {
       offset += usableH;
     }
   }
-  pdf.save(filename.endsWith(".pdf") ? filename : `${filename}.pdf`);
+  pdf.save(name);
 }
 
 export async function downloadAsPNG(el: HTMLElement, filename: string) {
@@ -53,7 +69,9 @@ export function downloadBlob(blob: Blob, filename: string) {
 }
 
 /** Prints only the given element by cloning it into a hidden iframe. */
-export function printElement(el: HTMLElement, title: string) {
+export function printElement(el: HTMLElement, title: string, paper: Paper = "a4") {
+  // Thermal roll size comes from the POS printer driver, so only set margins
+  const page = paper === "thermal" ? "@page{margin:4mm}" : "@page{size:A4;margin:12mm}";
   const iframe = document.createElement("iframe");
   iframe.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0";
   document.body.appendChild(iframe);
@@ -64,7 +82,7 @@ export function printElement(el: HTMLElement, title: string) {
   doc.open();
   doc.write(
     `<!doctype html><html class="${document.documentElement.className}"><head><title>${title}</title>${styles}
-    <style>@page{size:A4;margin:12mm}body{background:#fff;margin:0}</style></head>
+    <style>${page}body{background:#fff;margin:0}</style></head>
     <body>${el.outerHTML}</body></html>`,
   );
   doc.close();
