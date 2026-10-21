@@ -1,3 +1,12 @@
+# Raseed — invoicing & expense management
+
+Two clients share the same product idea:
+
+- **Web (this folder)** — the original Next.js receipt ledger (`npm run dev`)
+- **Flutter (`app/`)** — the mobile/web invoicing and expense app (`cd app && flutter run`)
+
+The Flutter app ports generate/upload receipts, English/Urdu templates, and local storage, then adds invoices, expenses, clients, and reports. See [`app/README.md`](app/README.md).
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
