@@ -1,6 +1,6 @@
 # Raseed (Flutter)
 
-Invoicing and expense management for Android, iOS, and web. This app sits in `app/` next to the original Next.js ledger and ports that receipt workflow into a full books product.
+Invoicing and expense management for Android, iOS, and web. This app sits in `mobile/` next to the original Next.js ledger and ports that receipt workflow into a full books product.
 
 ## What it covers
 
@@ -15,7 +15,7 @@ Marking an invoice paid creates a generated receipt automatically.
 ## Run
 
 ```bash
-cd app
+cd mobile
 flutter pub get
 flutter test
 flutter run
