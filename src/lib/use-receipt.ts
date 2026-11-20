@@ -8,7 +8,12 @@ import type { Receipt } from "./types";
 export function useReceipt(id: string) {
   const [receipt, setReceipt] = useState<Receipt | null | undefined>(undefined);
   useEffect(() => {
-    getReceipt(id).then((r) => setReceipt(r ?? null));
+    getReceipt(id)
+      .then((r) => setReceipt(r ?? null))
+      .catch((err) => {
+        console.error("Failed to load receipt", err);
+        setReceipt(null);
+      });
   }, [id]);
   return receipt;
 }
