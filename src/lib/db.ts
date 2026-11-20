@@ -20,16 +20,34 @@ interface ReceiptDB extends DBSchema {
 }
 
 let dbPromise: Promise<IDBPDatabase<ReceiptDB>> | null = null;
+const OPEN_TIMEOUT_MS = 4000;
 
 function db() {
   if (!dbPromise) {
-    dbPromise = openDB<ReceiptDB>("receipt-manager", 1, {
-      upgrade(database) {
-        const store = database.createObjectStore("receipts", { keyPath: "id" });
-        store.createIndex("by-created", "createdAt");
-        database.createObjectStore("files");
-        database.createObjectStore("meta");
-      },
+    dbPromise = Promise.race([
+      openDB<ReceiptDB>("receipt-manager", 2, {
+        upgrade(database) {
+          if (!database.objectStoreNames.contains("receipts")) {
+            const store = database.createObjectStore("receipts", { keyPath: "id" });
+            store.createIndex("by-created", "createdAt");
+          }
+          if (!database.objectStoreNames.contains("files")) {
+            database.createObjectStore("files");
+          }
+          if (!database.objectStoreNames.contains("meta")) {
+            database.createObjectStore("meta");
+          }
+        },
+        blocked() {
+          console.warn("IndexedDB open blocked by another connection");
+        },
+      }),
+      new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error("IndexedDB open timed out")), OPEN_TIMEOUT_MS);
+      }),
+    ]).catch((err) => {
+      dbPromise = null;
+      throw err;
     });
   }
   return dbPromise;

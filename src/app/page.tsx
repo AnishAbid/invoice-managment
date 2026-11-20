@@ -15,7 +15,12 @@ export default function Dashboard() {
   const [filter, setFilter] = useState<Filter>("all");
 
   useEffect(() => {
-    listReceipts().then(setReceipts);
+    listReceipts()
+      .then(setReceipts)
+      .catch((err) => {
+        console.error("Failed to load receipts", err);
+        setReceipts([]);
+      });
   }, []);
 
   const visible = useMemo(() => {
