@@ -1,5 +1,7 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+The native Flutter client (invoices, expenses, receipts) lives in [`mobile/`](mobile/). It is a real Android/iOS app, not a WebView of this site. See `mobile/README.md` to run it or build an APK.
+
 ## Getting Started
 
 First, run the development server:
