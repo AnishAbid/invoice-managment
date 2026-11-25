@@ -21,19 +21,19 @@ export default function ReceiptPage() {
   if (receipt === null)
     return (
       <div className="py-20 text-center text-sm text-slate-500">
-        Receipt not found. <Link href="/" className="text-emerald-700 underline">Back to receipts</Link>
+        Receipt not found. <Link href="/receipts" className="text-emerald-700 underline">Back to receipts</Link>
       </div>
     );
 
   async function handleDelete() {
     if (!confirm("Delete this receipt permanently?")) return;
     await deleteReceipt(id);
-    router.push("/");
+    router.push("/receipts");
   }
 
   return (
     <div className="space-y-5">
-      <Link href="/" className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800">
+      <Link href="/receipts" className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800">
         <ArrowLeft className="size-4" /> All receipts
       </Link>
       {receipt.kind === "generated" ? (
