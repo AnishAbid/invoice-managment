@@ -25,6 +25,7 @@ interface Draft {
 export default function UploadPage() {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [dragging, setDragging] = useState(false);
   const [error, setError] = useState("");
@@ -126,12 +127,31 @@ export default function UploadPage() {
           <Upload className="size-5" />
         </span>
         <div className="font-medium">Drop files here or click to browse</div>
-        <div className="text-xs text-slate-500">JPG, PNG, HEIC, WEBP or PDF · up to 20 MB each</div>
+        <div className="text-xs text-slate-500">JPG, PNG, HEIC, WEBP or PDF · up to 20 MB each · camera on phone</div>
+        <div className="mt-3 flex flex-wrap justify-center gap-2">
+          <button type="button" className="btn-secondary" onClick={() => inputRef.current?.click()}>
+            Browse files
+          </button>
+          <button type="button" className="btn-secondary" onClick={() => cameraRef.current?.click()}>
+            Use camera
+          </button>
+        </div>
         <input
           ref={inputRef}
           type="file"
           accept={ACCEPT}
           multiple
+          hidden
+          onChange={(e) => {
+            addFiles(e.target.files);
+            e.target.value = "";
+          }}
+        />
+        <input
+          ref={cameraRef}
+          type="file"
+          accept="image/*"
+          capture="environment"
           hidden
           onChange={(e) => {
             addFiles(e.target.files);

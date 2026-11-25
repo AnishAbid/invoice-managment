@@ -3,10 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Download, FileImage, Loader2, Pencil, Printer, Trash2 } from "lucide-react";
+import { ArrowLeft, Download, FileImage, Loader2, Pencil, Printer, Share2, Trash2 } from "lucide-react";
 import { ReceiptPreview } from "@/components/receipt-preview";
 import { deleteReceipt, getReceiptFile } from "@/lib/db";
-import { downloadAsPDF, downloadAsPNG, downloadBlob, printElement, printFile } from "@/lib/export";
+import { downloadAsPDF, downloadAsPNG, downloadBlob, printElement, printFile, shareOrDownloadPdf } from "@/lib/export";
 import { formatDate, formatMoney } from "@/lib/receipt";
 import { getTemplate } from "@/lib/templates";
 import { useReceipt } from "@/lib/use-receipt";
@@ -47,16 +47,17 @@ export default function ReceiptPage() {
 
 function GeneratedView({ receipt, onDelete }: { receipt: GeneratedReceipt; onDelete: () => void }) {
   const docRef = useRef<HTMLDivElement>(null);
-  const [busy, setBusy] = useState<"pdf" | "png" | null>(null);
+  const [busy, setBusy] = useState<"pdf" | "png" | "share" | null>(null);
   const filename = `${receipt.data.receiptNumber}-${receipt.title}`.replace(/[^\w؀-ۿ-]+/g, "_");
   const template = getTemplate(receipt.data.template);
 
-  async function run(kind: "pdf" | "png") {
+  async function run(kind: "pdf" | "png" | "share") {
     if (!docRef.current) return;
     setBusy(kind);
     try {
       if (kind === "pdf") await downloadAsPDF(docRef.current, filename, template.paper);
-      else await downloadAsPNG(docRef.current, filename);
+      else if (kind === "png") await downloadAsPNG(docRef.current, filename);
+      else await shareOrDownloadPdf(docRef.current, filename, template.paper);
     } finally {
       setBusy(null);
     }
@@ -78,6 +79,9 @@ function GeneratedView({ receipt, onDelete }: { receipt: GeneratedReceipt; onDel
           </button>
           <button className="btn-secondary" onClick={() => run("png")} disabled={!!busy}>
             {busy === "png" ? <Loader2 className="size-4 animate-spin" /> : <FileImage className="size-4" />} Image
+          </button>
+          <button className="btn-secondary" onClick={() => run("share")} disabled={!!busy}>
+            {busy === "share" ? <Loader2 className="size-4 animate-spin" /> : <Share2 className="size-4" />} Share
           </button>
           <button className="btn-secondary" onClick={() => docRef.current && printElement(docRef.current, filename, template.paper)}>
             <Printer className="size-4" /> Print

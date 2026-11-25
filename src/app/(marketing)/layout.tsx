@@ -26,7 +26,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
               How it helps
             </a>
             <Link
-              href="/receipts"
+              href="/home"
               className="rounded-lg px-3 py-2 text-sm font-medium text-emerald-950/80 transition hover:bg-emerald-950/5"
             >
               Open app

@@ -17,16 +17,18 @@ export default function LandingPage() {
               Every payment, on record.
             </h1>
             <p className="mt-4 max-w-md text-base leading-relaxed text-emerald-950/65 sm:text-lg">
-              Upload paper slips or generate clean bilingual receipts when the shop never gave you one.
+              Invoices, expenses, and bilingual receipts — when the shop never gave you a slip.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link href="/receipts/new" className="btn-primary px-5 py-2.5 text-base shadow-sm">
                 Generate a receipt
                 <ArrowRight className="size-4" />
               </Link>
-              <Link href="/upload" className="btn-secondary border-emerald-900/15 bg-white/70 px-5 py-2.5 text-base backdrop-blur">
-                <Upload className="size-4" />
-                Upload a slip
+              <Link
+                href="/home"
+                className="btn-secondary border-emerald-900/15 bg-white/70 px-5 py-2.5 text-base backdrop-blur"
+              >
+                Open app
               </Link>
             </div>
           </div>

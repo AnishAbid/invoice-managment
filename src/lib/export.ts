@@ -68,6 +68,34 @@ export function downloadBlob(blob: Blob, filename: string) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+/** Prefer Web Share when available; otherwise download PDF. */
+export async function shareOrDownloadPdf(el: HTMLElement, filename: string, paper: Paper = "a4") {
+  const name = filename.endsWith(".pdf") ? filename : `${filename}.pdf`;
+  if (typeof navigator !== "undefined" && typeof navigator.share === "function" && typeof navigator.canShare === "function") {
+    const [{ jsPDF }, canvas] = await Promise.all([
+      import("jspdf"),
+      (async () => {
+        const { default: html2canvas } = await import("html2canvas-pro");
+        await document.fonts.ready;
+        return html2canvas(el, { scale: 2, backgroundColor: "#ffffff", useCORS: true });
+      })(),
+    ]);
+    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: paper === "thermal" ? [80, 200] : "a4" });
+    const pageW = pdf.internal.pageSize.getWidth();
+    const margin = paper === "thermal" ? 4 : 10;
+    const imgW = pageW - margin * 2;
+    const imgH = (canvas.height * imgW) / canvas.width;
+    pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", margin, margin, imgW, imgH);
+    const blob = pdf.output("blob");
+    const file = new File([blob], name, { type: "application/pdf" });
+    if (navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file], title: name });
+      return;
+    }
+  }
+  await downloadAsPDF(el, name, paper);
+}
+
 /** Prints only the given element by cloning it into a hidden iframe. */
 export function printElement(el: HTMLElement, title: string, paper: Paper = "a4") {
   // Thermal roll size comes from the POS printer driver, so only set margins
