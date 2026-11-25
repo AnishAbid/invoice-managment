@@ -1,8 +1,8 @@
 import type { Language } from "./types";
 
 const en: Record<string, string> = {
-  app: "Raseed",
-  appUr: "رسید",
+  app: "Ledgerly",
+  appUr: "Ledgerly",
   home: "Home",
   budget: "Budget",
   activity: "Activity",
@@ -79,7 +79,7 @@ const en: Record<string, string> = {
   settings: "Settings",
   settingsHint: "Business profile and defaults",
   about: "About",
-  aboutBody: "Raseed keeps invoices, expenses, receipts, and budgets privately in this browser.",
+  aboutBody: "Ledgerly keeps invoices, expenses, receipts, and budgets privately in this browser.",
   khata: "Khata",
   khataHint: "To get {get} · to give {give}",
   cashBook: "Cash book",
@@ -195,7 +195,7 @@ const en: Record<string, string> = {
 
 const ur: Record<string, string> = {
   ...en,
-  app: "Raseed",
+  app: "Ledgerly",
   home: "ہوم",
   budget: "بجٹ",
   activity: "سرگرمی",

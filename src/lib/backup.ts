@@ -57,7 +57,7 @@ export async function decryptSnapshot(file: Blob, passphrase: string): Promise<L
     ciphertext: string;
     iterations?: number;
   };
-  if (payload.magic !== MAGIC) throw new Error("Not a Raseed backup file");
+  if (payload.magic !== MAGIC) throw new Error("Not a Ledgerly backup file");
   const salt = fromB64(payload.salt);
   const iv = fromB64(payload.iv);
   const key = await deriveKey(passphrase, salt);

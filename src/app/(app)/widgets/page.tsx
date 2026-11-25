@@ -23,7 +23,7 @@ export default function WidgetsPage() {
       </div>
       <div className="card space-y-4 p-5">
         <p className="text-sm text-slate-700">
-          Home-screen widgets are available in the Raseed mobile app. In the browser you can:
+          Home-screen widgets are available in the Ledgerly mobile app. In the browser you can:
         </p>
         <ul className="space-y-3 text-sm text-slate-600">
           <li className="flex gap-3">

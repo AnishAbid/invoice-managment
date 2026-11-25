@@ -714,7 +714,7 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
     backupEncrypted: async (passphrase) => {
       const snap = await db.exportSnapshot();
       const blob = await encryptSnapshot(snap, passphrase);
-      downloadBlob(blob, `raseed-backup-${todayISO()}.enc`);
+      downloadBlob(blob, `ledgerly-backup-${todayISO()}.enc`);
       await db.saveSettings({ ...state.settings, lastBackupAt: Date.now() });
       await refresh();
     },

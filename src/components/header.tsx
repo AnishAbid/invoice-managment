@@ -31,7 +31,7 @@ export function Header() {
           <span className="grid size-8 place-items-center rounded-lg bg-emerald-700 text-white">
             <ReceiptText className="size-4.5" />
           </span>
-          <span>Ledgerly</span>
+          <span>{t("app")}</span>
         </Link>
         <nav className="flex items-center gap-0.5 overflow-x-auto">
           {PRIMARY.map(({ href, key, icon: Icon }) => {
