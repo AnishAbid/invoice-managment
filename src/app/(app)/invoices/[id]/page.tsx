@@ -3,10 +3,10 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Download, Loader2, Pencil, Printer, Trash2 } from "lucide-react";
+import { ArrowLeft, Download, Loader2, Pencil, Printer, Share2, Trash2 } from "lucide-react";
 import { ReceiptPreview } from "@/components/receipt-preview";
 import { toGeneratedData } from "@/lib/document";
-import { downloadAsPDF, printElement } from "@/lib/export";
+import { downloadAsPDF, printElement, shareOrDownloadPdf } from "@/lib/export";
 import { computeTotals, formatDate } from "@/lib/receipt";
 import { getTemplate } from "@/lib/templates";
 import { useLedger } from "@/lib/store";
@@ -65,6 +65,16 @@ export default function InvoiceDetailPage() {
     }
   }
 
+  async function share() {
+    if (!docRef.current) return;
+    setBusy(true);
+    try {
+      await shareOrDownloadPdf(docRef.current, filename, template.paper);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return (
     <div className="space-y-5">
       <Link href="/invoices" className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800">
@@ -93,6 +103,9 @@ export default function InvoiceDetailPage() {
           ) : null}
           <button type="button" className="btn-secondary" disabled={busy} onClick={() => void download()}>
             <Download className="size-4" /> {t("downloadPdf")}
+          </button>
+          <button type="button" className="btn-secondary" disabled={busy} onClick={() => void share()}>
+            <Share2 className="size-4" /> {t("share")}
           </button>
           <button
             type="button"

@@ -225,6 +225,8 @@ const ur: Record<string, string> = {
 };
 
 export function tr(lang: Language, key: string, vars?: Record<string, string | number>) {
+  // Full chrome dictionaries for EN/UR; other UI languages fall back to English
+  // (matches mobile language set while keeping web chrome maintainable).
   let s = (lang === "ur" ? ur : en)[key] ?? en[key] ?? key;
   if (vars) {
     for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, String(v));

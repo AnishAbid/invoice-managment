@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, FilePlus2, PiggyBank, ReceiptText } from "lucide-react";
 import { FastAddDialog } from "@/components/fast-add-dialog";
 import { EmptyState } from "@/components/empty-state";
+import { MemberSwitcher } from "@/components/member-switcher";
 import { useLedger } from "@/lib/store";
 import { todayISO } from "@/lib/receipt";
 import { effectiveInvoiceStatus } from "@/lib/types";
@@ -58,19 +59,22 @@ export default function HomePage() {
           <h1 className="text-2xl font-semibold tracking-tight">{t("overview")}</h1>
           <p className="mt-1 text-sm text-slate-500">{t("overviewHint")}</p>
         </div>
-        <div className="flex rounded-lg border border-slate-200 bg-white p-1">
-          {(["day", "week", "month"] as ReportPeriod[]).map((p) => (
-            <button
-              key={p}
-              type="button"
-              onClick={() => setPeriod(p)}
-              className={`rounded-md px-3 py-1.5 text-sm font-medium ${
-                period === p ? "bg-emerald-50 text-emerald-800" : "text-slate-600 hover:bg-slate-50"
-              }`}
-            >
-              {t(p)}
-            </button>
-          ))}
+        <div className="flex flex-wrap items-center gap-3">
+          <MemberSwitcher />
+          <div className="flex rounded-lg border border-slate-200 bg-white p-1">
+            {(["day", "week", "month"] as ReportPeriod[]).map((p) => (
+              <button
+                key={p}
+                type="button"
+                onClick={() => setPeriod(p)}
+                className={`rounded-md px-3 py-1.5 text-sm font-medium ${
+                  period === p ? "bg-emerald-50 text-emerald-800" : "text-slate-600 hover:bg-slate-50"
+                }`}
+              >
+                {t(p)}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

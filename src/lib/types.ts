@@ -1,5 +1,18 @@
 export type Currency = "PKR" | "USD" | "GBP";
-export type Language = "en" | "ur";
+export type Language = "en" | "ur" | "ar" | "de" | "ja" | "zh";
+
+export const LANGUAGES: { code: Language; label: string }[] = [
+  { code: "en", label: "English" },
+  { code: "ur", label: "اردو (Urdu)" },
+  { code: "ar", label: "العربية (Arabic)" },
+  { code: "de", label: "Deutsch" },
+  { code: "ja", label: "日本語" },
+  { code: "zh", label: "中文" },
+];
+
+export function isRtlLanguage(lang: Language) {
+  return lang === "ur" || lang === "ar";
+}
 export type ReceiptKind = "generated" | "uploaded";
 export type TemplateId = "classic" | "thermal" | "modern" | "bold" | "elegant" | "memo";
 export type DiscountType = "percent" | "amount";

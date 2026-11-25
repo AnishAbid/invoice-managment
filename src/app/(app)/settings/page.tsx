@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLedger } from "@/lib/store";
 import { CURRENCIES } from "@/lib/receipt";
 import type { BusinessProfile, Currency, Language } from "@/lib/types";
+import { LANGUAGES } from "@/lib/types";
 import { TEMPLATES } from "@/lib/templates";
 
 export default function SettingsPage() {
@@ -142,8 +143,11 @@ export default function SettingsPage() {
               value={p.defaultLanguage}
               onChange={(e) => setP({ ...p, defaultLanguage: e.target.value as Language })}
             >
-              <option value="en">English</option>
-              <option value="ur">Urdu</option>
+              {LANGUAGES.map((l) => (
+                <option key={l.code} value={l.code}>
+                  {l.label}
+                </option>
+              ))}
             </select>
           </Field>
         </div>

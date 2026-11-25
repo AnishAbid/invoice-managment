@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Save, Trash2 } from "lucide-react";
 import { useLedger } from "@/lib/store";
+import type { TargetBehavior, TargetCadence } from "@/lib/types";
 
 export default function EditEnvelopePage() {
   const { id } = useParams<{ id: string }>();
@@ -14,6 +15,9 @@ export default function EditEnvelopePage() {
   const [name, setName] = useState("");
   const [group, setGroup] = useState("");
   const [archived, setArchived] = useState(false);
+  const [targetAmount, setTargetAmount] = useState("");
+  const [cadence, setCadence] = useState<TargetCadence>("monthly");
+  const [behavior, setBehavior] = useState<TargetBehavior>("refill");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -21,6 +25,9 @@ export default function EditEnvelopePage() {
     setName(env.name);
     setGroup(env.group);
     setArchived(env.archived);
+    setTargetAmount(env.target?.amount ? String(env.target.amount) : "");
+    setCadence(env.target?.cadence ?? "monthly");
+    setBehavior(env.target?.behavior ?? "refill");
   }, [env]);
 
   if (!ready) return <div className="py-20 text-center text-sm text-slate-500">{t("loading")}</div>;
@@ -35,11 +42,13 @@ export default function EditEnvelopePage() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
+    const amount = Number(targetAmount);
     await saveEnvelope({
       ...env!,
       name: name.trim() || env!.name,
       group: group.trim() || env!.group,
       archived,
+      target: amount > 0 ? { amount, cadence, behavior } : undefined,
       updatedAt: Date.now(),
     });
     router.push("/budget");
@@ -62,7 +71,7 @@ export default function EditEnvelopePage() {
       <h1 className="text-2xl font-semibold tracking-tight">{env.name}</h1>
       <div className="card grid grid-cols-2 gap-3 p-4 text-sm">
         <div>
-          <p className="text-xs text-slate-500">{t("left", { amount: "" }).replace(/\s*$/, "")}</p>
+          <p className="text-xs text-slate-500">Left</p>
           <p className="font-semibold text-emerald-800">{format(left)}</p>
         </div>
         <div>
@@ -78,6 +87,27 @@ export default function EditEnvelopePage() {
         <div>
           <label className="label">Group</label>
           <input className="input" value={group} onChange={(e) => setGroup(e.target.value)} />
+        </div>
+        <div>
+          <label className="label">Target amount (optional)</label>
+          <input className="input" type="number" min="0" step="0.01" value={targetAmount} onChange={(e) => setTargetAmount(e.target.value)} />
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="label">Cadence</label>
+            <select className="input" value={cadence} onChange={(e) => setCadence(e.target.value as TargetCadence)}>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+            </select>
+          </div>
+          <div>
+            <label className="label">Behavior</label>
+            <select className="input" value={behavior} onChange={(e) => setBehavior(e.target.value as TargetBehavior)}>
+              <option value="refill">Refill each period</option>
+              <option value="setAside">Save up</option>
+            </select>
+          </div>
         </div>
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" checked={archived} onChange={(e) => setArchived(e.target.checked)} />

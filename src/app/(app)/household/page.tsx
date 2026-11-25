@@ -54,6 +54,10 @@ export default function HouseholdPage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">{t("household")}</h1>
         <p className="mt-1 text-sm text-slate-500">{t("householdHint")}</p>
+        <p className="mt-2 text-xs text-slate-400">
+          Invite QR / join codes live on the Ledgerly mobile app (multi-device sync). On web, add members here and switch
+          who you are logging as.
+        </p>
       </div>
 
       <form className="card space-y-3 p-5" onSubmit={saveName}>

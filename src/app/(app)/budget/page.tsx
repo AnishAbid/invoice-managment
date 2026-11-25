@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowLeftRight, Plus, Search, Wallet } from "lucide-react";
 import { EmptyState } from "@/components/empty-state";
+import { MemberSwitcher } from "@/components/member-switcher";
 import { useLedger } from "@/lib/store";
 
 export default function BudgetPage() {
@@ -55,7 +56,8 @@ export default function BudgetPage() {
             {t("readyToAssign")}: <span className="font-medium text-emerald-800">{format(budget.readyToAssign)}</span>
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <MemberSwitcher />
           <Link href="/budget/envelopes/new" className="btn-primary">
             <Plus className="size-4" /> {t("addEnvelope")}
           </Link>

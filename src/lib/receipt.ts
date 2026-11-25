@@ -15,14 +15,30 @@ export function newId() {
   return crypto.randomUUID();
 }
 
+function localeFor(lang: Language, currency: Currency = "PKR") {
+  switch (lang) {
+    case "ur":
+      return "ur-PK";
+    case "ar":
+      return "ar";
+    case "de":
+      return "de-DE";
+    case "ja":
+      return "ja-JP";
+    case "zh":
+      return "zh-CN";
+    default:
+      return currency === "GBP" ? "en-GB" : currency === "USD" ? "en-US" : "en-PK";
+  }
+}
+
 export function formatMoney(amount: number, currency: Currency, lang: Language = "en") {
-  const locale = lang === "ur" ? "ur-PK" : currency === "GBP" ? "en-GB" : currency === "USD" ? "en-US" : "en-PK";
-  return new Intl.NumberFormat(locale, {
+  return new Intl.NumberFormat(localeFor(lang, currency), {
     style: "currency",
     currency,
     minimumFractionDigits: currency === "PKR" ? 0 : 2,
     maximumFractionDigits: 2,
-    // Latin digits keep amounts unambiguous in both languages
+    // Latin digits keep amounts unambiguous across scripts
     numberingSystem: "latn",
   } as Intl.NumberFormatOptions).format(amount || 0);
 }
@@ -30,7 +46,7 @@ export function formatMoney(amount: number, currency: Currency, lang: Language =
 export function formatDate(iso: string, lang: Language = "en") {
   if (!iso) return "";
   const d = new Date(`${iso}T00:00:00`);
-  return new Intl.DateTimeFormat(lang === "ur" ? "ur-PK" : "en-GB", {
+  return new Intl.DateTimeFormat(localeFor(lang), {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -186,6 +202,7 @@ const ur: Dict = {
 };
 
 export function t(lang: Language, key: string) {
+  // Receipt document strings: EN + UR; other langs fall back to English labels
   return (lang === "ur" ? ur : en)[key] ?? en[key] ?? key;
 }
 
