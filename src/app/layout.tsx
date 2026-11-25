@@ -23,7 +23,7 @@ const urdu = Noto_Nastaliq_Urdu({
 });
 
 export const metadata: Metadata = {
-  title: "Raseed — Receipt Manager",
+  title: "Ledgerly — Receipt Manager",
   description:
     "Upload, generate, download and print receipts. Create digital slips when the vendor doesn't provide one.",
 };

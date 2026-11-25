@@ -19,9 +19,7 @@ export function Header() {
           <span className="grid size-8 place-items-center rounded-lg bg-emerald-700 text-white">
             <ReceiptText className="size-4.5" />
           </span>
-          <span>
-            Raseed <span className="urdu text-sm font-normal text-slate-500">رسید</span>
-          </span>
+          <span>Ledgerly</span>
         </Link>
         <nav className="flex items-center gap-1">
           {NAV.map(({ href, label, icon: Icon }) => {

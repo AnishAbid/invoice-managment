@@ -11,8 +11,7 @@ export default function LandingPage() {
         <div className="relative mx-auto grid min-h-[100svh] max-w-6xl items-center gap-10 px-4 pb-16 pt-24 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8 lg:pb-20 lg:pt-20">
           <div className="landing-rise max-w-xl">
             <p className="font-display text-4xl font-semibold tracking-tight text-emerald-950 sm:text-5xl lg:text-[3.5rem] lg:leading-[1.05]">
-              Raseed
-              <span className="urdu ml-3 text-[0.72em] font-normal text-emerald-800/75">رسید</span>
+              Ledgerly
             </p>
             <h1 className="mt-5 font-display text-2xl font-medium leading-snug tracking-tight text-emerald-950/90 sm:text-3xl">
               Every payment, on record.
@@ -48,7 +47,7 @@ export default function LandingPage() {
             Paper vanishes. Your proof shouldn&apos;t.
           </h2>
           <p className="mt-5 text-base leading-relaxed text-emerald-950/65 sm:text-lg">
-            Vendors forget slips. Photos get buried in the camera roll. Raseed gathers every receipt — generated or
+            Vendors forget slips. Photos get buried in the camera roll. Ledgerly gathers every receipt — generated or
             uploaded — so returns, reimbursements, and tax season aren&apos;t a scavenger hunt.
           </p>
         </div>
@@ -65,7 +64,7 @@ export default function LandingPage() {
               Generate, capture, keep.
             </h2>
             <p className="mt-4 text-base leading-relaxed text-emerald-950/65 sm:text-lg">
-              Three ways Raseed covers the gap between a purchase and a usable record.
+              Three ways Ledgerly covers the gap between a purchase and a usable record.
             </p>
           </div>
 
