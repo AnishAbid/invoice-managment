@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { FilePlus2, LayoutGrid, ReceiptText, Upload } from "lucide-react";
 
 const NAV = [
-  { href: "/", label: "Receipts", icon: LayoutGrid },
+  { href: "/receipts", label: "Receipts", icon: LayoutGrid },
   { href: "/receipts/new", label: "Generate", icon: FilePlus2 },
   { href: "/upload", label: "Upload", icon: Upload },
 ] as const;
@@ -25,7 +25,11 @@ export function Header() {
         </Link>
         <nav className="flex items-center gap-1">
           {NAV.map(({ href, label, icon: Icon }) => {
-            const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
+            const active =
+              href === "/receipts"
+                ? pathname === "/receipts" ||
+                  (pathname.startsWith("/receipts/") && !pathname.startsWith("/receipts/new"))
+                : pathname.startsWith(href);
             return (
               <Link
                 key={href}

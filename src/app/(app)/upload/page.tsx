@@ -96,7 +96,7 @@ export default function UploadPage() {
       await saveReceipt(receipt, d.file);
       ids.push(receipt.id);
     }
-    router.push(ids.length === 1 ? `/receipts/${ids[0]}` : "/");
+    router.push(ids.length === 1 ? `/receipts/${ids[0]}` : "/receipts");
   }
 
   return (

@@ -4,6 +4,7 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-urdu: var(--font-urdu);
+  --font-display: var(--font-bricolage);
 }
 
 :root {
@@ -44,3 +45,72 @@ body {
 @utility btn-danger {
   @apply btn border border-red-200 bg-white text-red-600 hover:bg-red-50;
 }
+
+/* —— Marketing landing —— */
+.landing-atmosphere {
+  background:
+    radial-gradient(ellipse 90% 70% at 12% 18%, rgba(16, 185, 129, 0.22), transparent 55%),
+    radial-gradient(ellipse 70% 55% at 88% 12%, rgba(6, 95, 70, 0.14), transparent 50%),
+    radial-gradient(ellipse 60% 50% at 70% 88%, rgba(52, 211, 153, 0.12), transparent 55%),
+    linear-gradient(165deg, #e7f2eb 0%, #f3f7f4 42%, #eef5f1 100%);
+}
+
+.landing-atmosphere::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+}
+
+.landing-atmosphere-soft {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(16, 185, 129, 0.16), transparent 55%),
+    linear-gradient(180deg, #eef5f0 0%, #f7faf8 100%);
+}
+
+@keyframes landing-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes landing-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.landing-rise {
+  animation: landing-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.landing-rise-delayed {
+  animation: landing-rise 1s cubic-bezier(0.22, 1, 0.36, 1) 0.18s both;
+}
+
+.landing-float {
+  animation: landing-float 6.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-rise,
+  .landing-rise-delayed,
+  .landing-float {
+    animation: none;
+  }
+}
+
+/* Section content stays visible by default — hero already has rise + float motion. */

@@ -13,7 +13,10 @@ export default function EditReceiptPage() {
   if (!receipt || receipt.kind !== "generated")
     return (
       <div className="py-20 text-center text-sm text-slate-500">
-        This receipt can&apos;t be edited. <Link href="/" className="text-emerald-700 underline">Back to receipts</Link>
+        This receipt can&apos;t be edited.{" "}
+        <Link href="/receipts" className="text-emerald-700 underline">
+          Back to receipts
+        </Link>
       </div>
     );
 
